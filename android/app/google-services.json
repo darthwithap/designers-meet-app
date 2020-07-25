@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "235577749330",
+    "firebase_url": "https://thedesignersmeet-920ab.firebaseio.com",
+    "project_id": "thedesignersmeet-920ab",
+    "storage_bucket": "thedesignersmeet-920ab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235577749330:android:cec2e7e8cf959615bbd48b",
+        "android_client_info": {
+          "package_name": "com.thedesignersmeet.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "235577749330-beqrf6b0qvmgvivnm5gdcc3imde0dala.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thedesignersmeet.app",
+            "certificate_hash": "857b6640148d328d7827046998eb205658018164"
+          }
+        },
+        {
+          "client_id": "235577749330-voevaqbb5g66vd97mmnotrfdpp3mmgbr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIP9zoaef60UgfCVV7oKd8BjRmKNzZxu8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "235577749330-voevaqbb5g66vd97mmnotrfdpp3mmgbr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
