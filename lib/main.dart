@@ -1,3 +1,5 @@
+import 'package:designers_meet/screens/auth/auth.dart';
+import 'package:designers_meet/wrapper.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -9,12 +11,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Screen',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home:  
+      debugShowCheckedModeBanner: false,
+      home:  Wrapper(),
     );
   }
 }
