@@ -1,23 +1,43 @@
-import 'package:designers_meet/global.dart';
 import 'package:designers_meet/services/auth.dart';
-import 'package:flutter/material.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SignIn extends StatefulWidget {
+import '../../global.dart';
+
+class SignUp extends StatefulWidget {
   final Function toggleView;
-  SignIn({this.toggleView});
+  SignUp({this.toggleView});
   @override
-  _SignInState createState() => _SignInState();
+  _SignUpState createState() => _SignUpState();
 }
 
-class _SignInState extends State<SignIn> {
-  final AuthService _auth = AuthService();
+class _SignUpState extends State<SignUp> {
+  final _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
 
+  String name;
   String email;
   String password;
 
+
+  bool isValidPassword(String password) {
+    bool exists = password != null && password.isNotEmpty;
+    bool hasDigit = password.contains(RegExp(r'[0-9]'));
+    bool hasUppercase = password.contains(new RegExp(r'[A-Z]'));
+    bool hasLowercase = password.contains(new RegExp(r'[a-z]'));
+    bool hasSpecialCharacters =
+        password.contains(new RegExp(r'[!@#$%^&*(),.?":{}|]'));
+    bool hasMinLength = password.length > 9;
+
+    return exists &
+        hasDigit &
+        hasUppercase &
+        hasLowercase &
+        hasSpecialCharacters &
+        hasMinLength;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +59,7 @@ class _SignInState extends State<SignIn> {
                 height: 20.h,
               ),
               Text(
-                'Sign In',
+                'Sign Up',
                 style: TextStyle(fontSize: 70.sp, fontWeight: FontWeight.bold),
               ),
               Form(
@@ -51,8 +71,20 @@ class _SignInState extends State<SignIn> {
                       ),
                       TextFormField(
                         onChanged: (val) {
+                          setState(() => name = val);
+                        },
+                        validator: (val) =>
+                            (val.isNotEmpty) ? null : "Name cannot be blank",
+                      ),
+                      SizedBox(
+                        height: 40.h,
+                      ),
+                      TextFormField(
+                        onChanged: (val) {
                           setState(() => email = val);
                         },
+                        validator: (val) =>
+                            (EmailValidator.validate(val)) ? null : "Enter a valid email for verification",
                       ),
                       SizedBox(
                         height: 40.h,
@@ -61,6 +93,9 @@ class _SignInState extends State<SignIn> {
                         onChanged: (val) {
                           setState(() => password = val);
                         },
+                        validator: (val) => (isValidPassword(val))
+                            ? null
+                            : "Min 10 chars; mix of upper, lower, digits and special chars",
                         obscureText: true,
                       ),
                       SizedBox(
@@ -71,7 +106,7 @@ class _SignInState extends State<SignIn> {
                           if (_formKey.currentState.validate()) {}
                         },
                         color: kPrimaryColor,
-                        child: Text('Sign In'),
+                        child: Text('Sign Up'),
                       ),
                       SizedBox(
                         height: 30.h,
@@ -84,14 +119,14 @@ class _SignInState extends State<SignIn> {
                             ),
                             Row(
                               children: <Widget>[
-                                Text('Don\'t have an account?'),
+                                Text('Already have an account?'),
                                 SizedBox(
                                   width: 30.w,
                                 ),
                                 GestureDetector(
                                   onTap: widget.toggleView,
                                   child: Text(
-                                    'Sign Up',
+                                    'Sign In',
                                     style: TextStyle(
                                         fontSize: 40.sp,
                                         fontWeight: FontWeight.w600,
@@ -111,14 +146,3 @@ class _SignInState extends State<SignIn> {
     );
   }
 }
-
-// RaisedButton(
-//           onPressed: () async {
-//             dynamic result = await _auth.signInAnonymously();
-//             if (result == null)
-//               print('Error Signing in');
-//             else
-//               print('Signed in user: ${result.uid}');
-//           },
-//           child: Text('Sign in as a guest'),
-//         ),
