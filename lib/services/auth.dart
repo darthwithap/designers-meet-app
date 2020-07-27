@@ -1,4 +1,5 @@
 import 'package:designers_meet/models/user.dart';
+import 'package:designers_meet/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -82,12 +83,15 @@ class AuthService {
   }
 
   // sign up with email and password
-  Future<User> signUpWithEmailAndPassword(String email, String password) async {
+  Future<User> signUpWithEmailAndPassword(
+      String email, String password, String name) async {
     error = "";
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
+      await DatabaseService(uid: user.uid)
+          .updateUserData(name, "9999999999", 0, 1);
       return _userFromFirebaseUser(user);
     } catch (e) {
       setError(e.code);
