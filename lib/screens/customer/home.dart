@@ -1,4 +1,4 @@
-import 'package:designers_meet/global.dart';
+import 'package:designers_meet/global/constants.dart';
 import 'package:designers_meet/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';

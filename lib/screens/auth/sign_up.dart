@@ -1,10 +1,10 @@
+import 'package:designers_meet/global/constants.dart';
+import 'package:designers_meet/global/loading.dart';
 import 'package:designers_meet/services/auth.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../global.dart';
 
 class SignUp extends StatefulWidget {
   final Function toggleView;
@@ -20,7 +20,10 @@ class _SignUpState extends State<SignUp> {
   String name;
   String email;
   String password;
-
+  String error = "";
+  bool hasError = false;
+  bool isLoading = false;
+  double scaffoldOpacity = 1.0;
 
   bool isValidPassword(String password) {
     bool exists = password != null && password.isNotEmpty;
@@ -41,108 +44,163 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kBgWhiteColor,
-      appBar: AppBar(
-        backgroundColor: kBgWhiteColor,
-        elevation: 0.0,
-        title: Text(
-          'The Designer\'s Meet',
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
-      body: Container(
-          padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 60.w),
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 20.h,
+    return Stack(
+      children: <Widget>[
+        AnimatedOpacity(
+          opacity: scaffoldOpacity,
+          duration: Duration(milliseconds: 20),
+          child: Scaffold(
+            backgroundColor: kBgWhiteColor,
+            appBar: AppBar(
+              backgroundColor: kBgWhiteColor,
+              elevation: 0.0,
+              title: Text(
+                'The Designer\'s Meet',
+                style: TextStyle(color: Colors.black),
               ),
-              Text(
-                'Sign Up',
-                style: TextStyle(fontSize: 70.sp, fontWeight: FontWeight.bold),
-              ),
-              Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 40.h,
-                      ),
-                      TextFormField(
-                        onChanged: (val) {
-                          setState(() => name = val);
-                        },
-                        validator: (val) =>
-                            (val.isNotEmpty) ? null : "Name cannot be blank",
-                      ),
-                      SizedBox(
-                        height: 40.h,
-                      ),
-                      TextFormField(
-                        onChanged: (val) {
-                          setState(() => email = val);
-                        },
-                        validator: (val) =>
-                            (EmailValidator.validate(val)) ? null : "Enter a valid email for verification",
-                      ),
-                      SizedBox(
-                        height: 40.h,
-                      ),
-                      TextFormField(
-                        onChanged: (val) {
-                          setState(() => password = val);
-                        },
-                        validator: (val) => (isValidPassword(val))
-                            ? null
-                            : "Min 10 chars; mix of upper, lower, digits and special chars",
-                        obscureText: true,
-                      ),
-                      SizedBox(
-                        height: 40.h,
-                      ),
-                      RaisedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState.validate()) {}
-                        },
-                        color: kPrimaryColor,
-                        child: Text('Sign Up'),
-                      ),
-                      SizedBox(
-                        height: 30.h,
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ),
+            body: Container(
+                padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 60.w),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Text(
+                      'Sign Up',
+                      style: TextStyle(
+                          fontSize: 70.sp, fontWeight: FontWeight.bold),
+                    ),
+                    Form(
+                        key: _formKey,
+                        child: Column(
                           children: <Widget>[
                             SizedBox(
-                              width: 20.w,
+                              height: 40.h,
                             ),
-                            Row(
-                              children: <Widget>[
-                                Text('Already have an account?'),
-                                SizedBox(
-                                  width: 30.w,
-                                ),
-                                GestureDetector(
-                                  onTap: widget.toggleView,
-                                  child: Text(
-                                    'Sign In',
-                                    style: TextStyle(
-                                        fontSize: 40.sp,
-                                        fontWeight: FontWeight.w600,
-                                        color: kPrimaryColor),
-                                  ),
-                                )
-                              ],
+                            TextFormField(
+                              onChanged: (val) {
+                                setState(() => name = val);
+                              },
+                              decoration: textFormFieldDecoration.copyWith(
+                                  hintText: "Your Name"),
+                              validator: (val) => (val.isNotEmpty)
+                                  ? null
+                                  : "Name cannot be blank",
                             ),
                             SizedBox(
-                              width: 20.w,
+                              height: 40.h,
                             ),
-                          ]),
-                    ],
-                  )),
-            ],
-          )),
+                            TextFormField(
+                              onChanged: (val) {
+                                setState(() => email = val);
+                              },
+                              decoration: textFormFieldDecoration.copyWith(
+                                  hintText: "Your Email"),
+                              validator: (val) => (EmailValidator.validate(
+                                      val.replaceAll(" ", "")))
+                                  ? null
+                                  : "Enter a valid email for verification",
+                            ),
+                            SizedBox(
+                              height: 40.h,
+                            ),
+                            TextFormField(
+                              onChanged: (val) {
+                                setState(() => password = val);
+                              },
+                              decoration: textFormFieldDecoration.copyWith(
+                                  hintText: "Your Password"),
+                              validator: (val) => (isValidPassword(val))
+                                  ? null
+                                  : "Min 10 chars; mix of upper, lower, digits and special chars",
+                              obscureText: true,
+                            ),
+                            SizedBox(
+                              height: 40.h,
+                            ),
+                            RaisedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState.validate()) {
+                                  setState(() {
+                                    scaffoldOpacity = 0.3;
+                                    isLoading = true;
+                                  });
+                                  print("$name & $email & $password");
+                                  dynamic result =
+                                      await _auth.signUpWithEmailAndPassword(
+                                          email, password);
+                                  if (result == null) {
+                                    setState(() {
+                                      error = _auth.getError().toString();
+                                      if (error.contains(""))
+                                      hasError = true;
+                                      isLoading = false;
+                                      scaffoldOpacity = 1.0;
+                                    });
+                                  } else {
+                                    print("Sign Up successful");
+                                  }
+                                }
+                              },
+                              color: kPrimaryColor,
+                              child: Text('Sign Up'),
+                            ),
+                            SizedBox(
+                              height: 30.h,
+                            ),
+                            Visibility(
+                              visible: hasError,
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    error,
+                                    style: TextStyle(
+                                        fontSize: 33.sp, color: Colors.red),
+                                  ),
+                                  SizedBox(
+                                    height: 30.h,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 20.w,
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Text('Already have an account?'),
+                                      SizedBox(
+                                        width: 30.w,
+                                      ),
+                                      GestureDetector(
+                                        onTap: widget.toggleView,
+                                        child: Text(
+                                          'Sign In',
+                                          style: TextStyle(
+                                              fontSize: 40.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: kPrimaryColor),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 20.w,
+                                  ),
+                                ]),
+                          ],
+                        )),
+                  ],
+                )),
+          ),
+        ),
+        Visibility(visible: isLoading, child: Loading()),
+      ],
     );
   }
 }

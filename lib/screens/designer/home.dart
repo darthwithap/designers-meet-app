@@ -1,7 +1,7 @@
+import 'package:designers_meet/global/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../global.dart';
 
 class DesignerHomeScreen extends StatefulWidget {
   @override
