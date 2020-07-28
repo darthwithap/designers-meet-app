@@ -122,7 +122,7 @@ class _SignInState extends State<SignIn> {
                                     scaffoldOpacity = 1.0;
                                   });
                                 } else {
-                                  print("Signed in as ${_auth.currentUser}");
+                                  print("Signed in as ${result.uid}");
                                 }
                               }
                             },

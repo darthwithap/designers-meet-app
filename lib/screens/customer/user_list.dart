@@ -1,4 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:designers_meet/models/user.dart';
+import 'package:designers_meet/screens/customer/user_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,11 +14,14 @@ class _CustomerListState extends State<CustomerList> {
   Widget build(BuildContext context) {
     // ignore: todo
     //TODO: replace this with customers collection
-    final users = Provider.of<QuerySnapshot>(context);
-    print("DOCS\n");
-    for (var doc in users.documents) {
-      print(doc.data); 
-    }
-    return Container();
+    final users = Provider.of<List<User>>(context);
+
+    return ListView.builder(
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return CustomerTile(user: users[index]) ;
+      },
+      itemCount: users.length,
+    );
   }
 }

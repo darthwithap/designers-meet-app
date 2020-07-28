@@ -129,12 +129,16 @@ class _SignUpState extends State<SignUp> {
                                   print("$name & $email & $password");
                                   dynamic result =
                                       await _auth.signUpWithEmailAndPassword(
-                                          email, password, name);
+                                          name,
+                                          email,
+                                          password,
+                                          "999999999",
+                                          0,
+                                          1);
                                   if (result == null) {
                                     setState(() {
                                       error = _auth.getError().toString();
-                                      if (error.contains(""))
-                                      hasError = true;
+                                      if (error.contains("")) hasError = true;
                                       isLoading = false;
                                       scaffoldOpacity = 1.0;
                                     });

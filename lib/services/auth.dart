@@ -43,24 +43,31 @@ class AuthService {
   }
 
   // covert firebase user to custom user
-  User _userFromFirebaseUser(FirebaseUser firebaseUser) {
-    return firebaseUser != null ? User(uid: firebaseUser.uid) : null;
+  User _userFromFirebaseUser(FirebaseUser firebaseUser,
+      [String name, String email, String phone, int gender, int type]) {
+    return firebaseUser != null
+        ? User(
+            uid: firebaseUser.uid,
+            name: name,
+            email: email,
+            phone: phone,
+            gender: gender,
+            type: type)
+        : null;
   }
 
   // auth change user stream
-  Stream<User> get currentUser =>
-      _auth.onAuthStateChanged.map(_userFromFirebaseUser);
+  Stream<FirebaseUser> get currentUser {
+    return _auth.onAuthStateChanged;
+  }
 
   // sign in anonymously
   Future<User> signInAnonymously() async {
-    error = "";
     try {
       AuthResult result = await _auth.signInAnonymously();
       FirebaseUser user = result.user;
       return _userFromFirebaseUser(user);
     } catch (e) {
-      // ignore: todo
-      // TODO: Toast to show error
       setError(e.code);
       print("Error signin anonymously: ${e.code}");
       return null;
@@ -69,7 +76,6 @@ class AuthService {
 
   // sign in with email and password
   Future<User> signInWithEmailAndPassword(String email, String password) async {
-    error = "";
     try {
       AuthResult result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -83,16 +89,15 @@ class AuthService {
   }
 
   // sign up with email and password
-  Future<User> signUpWithEmailAndPassword(
-      String email, String password, String name) async {
-    error = "";
+  Future<User> signUpWithEmailAndPassword(String name, String email,
+      String password, String phone, int gender, int type) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
       await DatabaseService(uid: user.uid)
-          .updateUserData(name, "9999999999", 0, 1);
-      return _userFromFirebaseUser(user);
+          .updateUserData(user.uid, name, email, phone, gender, type);
+      return _userFromFirebaseUser(user, name, user.email, phone, gender, type);
     } catch (e) {
       setError(e.code);
       print("Error signing up: ${e.code}");
@@ -102,7 +107,6 @@ class AuthService {
 
   // signout
   Future signOut() async {
-    error = "";
     try {
       return await _auth.signOut();
     } catch (e) {
