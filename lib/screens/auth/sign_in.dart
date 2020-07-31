@@ -1,6 +1,7 @@
 import 'package:designers_meet/global/constants.dart';
 import 'package:designers_meet/global/loading.dart';
 import 'package:designers_meet/services/auth.dart';
+import 'package:designers_meet/wrapper.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -122,6 +123,8 @@ class _SignInState extends State<SignIn> {
                                     scaffoldOpacity = 1.0;
                                   });
                                 } else {
+                                  /* globalActiveUser = await Wrapper()
+                                      .getCurrentUserObject(result.uid); */
                                   print("Signed in as ${result.uid}");
                                 }
                               }

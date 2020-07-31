@@ -1,6 +1,7 @@
 import 'package:designers_meet/global/constants.dart';
 import 'package:designers_meet/global/loading.dart';
 import 'package:designers_meet/services/auth.dart';
+import 'package:designers_meet/wrapper.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -143,7 +144,9 @@ class _SignUpState extends State<SignUp> {
                                       scaffoldOpacity = 1.0;
                                     });
                                   } else {
-                                    print("Sign Up successful");
+                                    /* globalActiveUser = await Wrapper()
+                                        .getCurrentUserObject(result.uid); */
+                                    print("Sign Up successful, ${result.uid}");
                                   }
                                 }
                               },

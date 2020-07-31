@@ -44,15 +44,14 @@ class AuthService {
 
   // covert firebase user to custom user
   User _userFromFirebaseUser(FirebaseUser firebaseUser,
-      [String name, String email, String phone, int gender, int type]) {
+      [String name, String email, String phone]) {
     return firebaseUser != null
         ? User(
             uid: firebaseUser.uid,
             name: name,
             email: email,
             phone: phone,
-            gender: gender,
-            type: type)
+            )
         : null;
   }
 
@@ -97,7 +96,7 @@ class AuthService {
       FirebaseUser user = result.user;
       await DatabaseService(uid: user.uid)
           .updateUserData(user.uid, name, email, phone, gender, type);
-      return _userFromFirebaseUser(user, name, user.email, phone, gender, type);
+      return _userFromFirebaseUser(user, name, user.email, phone);
     } catch (e) {
       setError(e.code);
       print("Error signing up: ${e.code}");

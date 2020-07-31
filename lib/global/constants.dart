@@ -15,4 +15,4 @@ Color kBlack43 = Colors.black.withOpacity(0.43);
 Color kDividerColor = Color(0xff707070);
 
 const textFormFieldDecoration = InputDecoration();
-User activeUser;
+//User globalActiveUser;

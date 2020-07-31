@@ -23,6 +23,18 @@ class DatabaseService {
     });
   }
 
+  // user data from snapshot
+  UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
+    return UserData(
+        uid: uid,
+        name: snapshot.data['name'] ?? 'John Smith  ',
+        email: snapshot.data['email'] ?? 'youremail@domain.com',
+        phone: snapshot.data['phone'] ?? '9999999999',
+        gender: snapshot.data['gender'] ?? -1,
+        type: snapshot.data['type'] ?? -1,
+        size: snapshot.data['size'] ?? 2);
+  }
+
   // user list from snapshot
   List<User> _userListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
@@ -35,4 +47,10 @@ class DatabaseService {
   Stream<List<User>> get users {
     return userCollection.snapshots().map(_userListFromSnapshot);
   }
+
+  // get user doc stream
+  Stream<UserData> get userData {
+    return userCollection.document(uid).snapshots().map(_userDataFromSnapshot);
+  }
 }
+ 
