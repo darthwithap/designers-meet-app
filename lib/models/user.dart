@@ -32,6 +32,15 @@ class UserData {
   final int gender;
   final int type;
   final int size;
+  final String location;
 
-  UserData({this.uid, this.name, this.email, this.phone, this.gender, this.type, this .size});
+  UserData(
+      {this.uid,
+      this.name,
+      this.email,
+      this.phone,
+      this.gender,
+      this.type,
+      this.size,
+      this.location});
 }

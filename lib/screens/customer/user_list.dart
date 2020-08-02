@@ -14,7 +14,7 @@ class _CustomerListState extends State<CustomerList> {
   Widget build(BuildContext context) {
     // ignore: todo
     //TODO: replace this with customers collection
-    final users = Provider.of<List<User>>(context);
+    final users = Provider.of<List<User>>(context) ?? [];
 
     return ListView.builder(
       shrinkWrap: true,

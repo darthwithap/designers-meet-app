@@ -25,6 +25,7 @@ class _SignUpState extends State<SignUp> {
   bool hasError = false;
   bool isLoading = false;
   double scaffoldOpacity = 1.0;
+  int type = 0;
 
   bool isValidPassword(String password) {
     bool exists = password != null && password.isNotEmpty;
@@ -130,12 +131,11 @@ class _SignUpState extends State<SignUp> {
                                   print("$name & $email & $password");
                                   dynamic result =
                                       await _auth.signUpWithEmailAndPassword(
-                                          name,
-                                          email,
-                                          password,
-                                          "999999999",
-                                          0,
-                                          1);
+                                    name,
+                                    email,
+                                    password,
+                                    type,
+                                  );
                                   if (result == null) {
                                     setState(() {
                                       error = _auth.getError().toString();

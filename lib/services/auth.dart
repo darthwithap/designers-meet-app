@@ -89,14 +89,14 @@ class AuthService {
 
   // sign up with email and password
   Future<User> signUpWithEmailAndPassword(String name, String email,
-      String password, String phone, int gender, int type) async {
+      String password, int type) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
       await DatabaseService(uid: user.uid)
-          .updateUserData(user.uid, name, email, phone, gender, type);
-      return _userFromFirebaseUser(user, name, user.email, phone);
+          .addUserData(user.uid, name, email, type);
+      return _userFromFirebaseUser(user, name, user.email);
     } catch (e) {
       setError(e.code);
       print("Error signing up: ${e.code}");
